@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Malayalam Dialect Translator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 10px;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            max-width: 455px;
+            width: 100%;
+            padding: 30px 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #0b3954;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #205072;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 1rem;
+            border: 2px solid #a9cce3;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #0b3954;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            background-color: #0b3954;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #144d6c;
+        }
+
+        .result {
+            margin-top: 2px;
+            padding: 10px 20px;
+            background-color: #d7f3fc;
+            border-left: 6px solid #0b3954;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+
+        .error {
+            background-color: #fce4e4;
+            border-left-color: #d9534f;
+            color: #a94442;
+        }
+
+        .translation-label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #0b3954;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Malayalam Dialect Translator</h1>
+        <form method="POST" action="/">
+            <label for="english">Enter English Phrase:</label>
+            <input type="text" id="english" name="english" placeholder="e.g. How are you" value="{{ request.form.get('english', '') }}" required />
+
+            <label for="district">Select District:</label>
+            <select id="district" name="district" required>
+                <option value="" disabled selected>Select district</option>
+                {% for district in districts %}
+                    <option value="{{ district }}" {% if request.form.get('district') == district %}selected{% endif %}>{{ district }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Translate</button>
+        </form>
+
+        {% if result %}
+            <div class="result {% if '❌' in result %}error{% endif %}">
+                {% if malayalam %}
+                    <div class="translation-label">Malayalam:</div>
+                    {{ malayalam }}
+                    <br><br>
+                    <div class="translation-label">Dialect Translation:</div>
+                {% endif %}
+                {{ result }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
