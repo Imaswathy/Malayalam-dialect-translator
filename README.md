@@ -71,9 +71,7 @@ District selector
 
 Output:
 
-Standard Malayalam
-
-Dialect version
+https://malayalam-dialect-translator.onrender.com/
 
 Tech: Flask (Python), HTML, CSS
 
