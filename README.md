@@ -1,21 +1,21 @@
 Malayalam Dialect Translater 🎯
-Basic Details
 
-Member
+
+Member:
 Aswathy R Nair-MBCCET,Kuttikkanam
 
-Project Description
+Project Description:
 When an english phrase is given, firstly it translates to malayalam. Then according to the districts, in Kerala, we choose the malayalam 
 phrase gets translated to the corresponding speaking slang.
 
-The Problem (that doesn't exist)
+The Problem (that doesn't exist):
 Translation of speaking slang.
 
-The Solution (that nobody asked for)
+The Solution (that nobody asked for):
 Created a Translator which translates to corresponding speaking slang.
 
-Technical Details
-Technologies/Components Used
+Technical Details:
+Technologies/Components Used:
 For Software:
 
 Python
@@ -26,16 +26,16 @@ HTML5,CSS3
 Implementation
 For Software:
 
-Installation
-[commands]
+Installation:
+flask
 
 Run
 python app.py
 
-Project Documentation
+Project Documentation:
 For Software:
 
-Screenshots (Add at least 3)
+
 https://drive.google.com/file/d/1h5tfQOx2yNUyJLq2XiQEzTNqJiSLNWSs/view?usp=sharing
 A Flask web app that translates English phrases into standard Malayalam and regional dialects based on selected Kerala districts.
 Key Features
@@ -80,10 +80,10 @@ Tech: Flask (Python), HTML, CSS
 
 
 
-Project Demo
-Video
+Project Demo:
+Video:
 https://drive.google.com/file/d/114EiS75aiG3a8_BGyw-wb5S_HiRzwnpL/view?usp=sharing
 
 
-Team Contributions
+Team Contributions:
 Aswathy R Nair:Full project.
