@@ -1,154 +1,71 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Malayalam Dialect Translator</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4f8;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 40px 10px;
-      min-height: 100vh;
-    }
+from flask import Flask, render_template, request
 
-    .container {
-      background: white;
-      max-width: 455px;
-      width: 100%;
-      padding: 30px 25px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-    }
+app = Flask(__name__)
 
-    h1 {
-      margin-bottom: 20px;
-      text-align: center;
-      color: #0b3954;
-    }
+# District-wise dialect dictionary (replace/add more as needed)
+dialects = {
+    "Kottayam": {
+        "how are you": "സുഖമാണോ മച്ചാ",
+        "what are you doing": "എന്താ പണിയുന്നു മച്ചാ",
+        "where are you going": "എവിടെയാ പോവുന്നേ",
+        "i am fine": "എനിക്ക് സുഖമാണ്",
+    },
+    "Idukki": {
+        "how are you": "സുഖമാണോ സൈപ്പേ",
+        "what are you doing": "എന്താ ചെയ്യുന്നു സൈപ്പേ",
+        "where are you going": "എവിടെയാ പോവുന്നേ സൈപ്പേ",
+        "i am fine": "എനിക്ക് സുഖമാണെ",
+    },
+    "Ernakulam": {
+        "how are you": "സുഖമാണോ ചേട്ടാ",
+        "what are you doing": "എന്താ ചെയ്യുന്നു ചേട്ടാ",
+        "where are you going": "എവിടെയാ പോവുന്നേ ചേട്ടാ",
+        "i am fine": "എനിക്ക് സുഖമാണു ചേട്ടാ",
+    },
+    "Malappuram": {
+        "how are you": "സുഖമാണോ ചേട്ടാ",
+        "what are you doing": "ചെയ്യുന്‌നെന്താ ചേട്ടാ",
+        "where are you going": "പോകുന്‌നെവിടെ ചേട്ടാ",
+        "i am fine": "എനിക്ക് സുഖമാണു ചേട്ടാ",
+    },
+    "Trivandrum": {
+        "how are you": "സുഖമാണോ മച്ചാ",
+        "what are you doing": "എന്ത് ചെയ്യുന്നു മച്ചാ",
+        "where are you going": "എവിടെയാ പോകുന്നേ മച്ചാ",
+        "i am fine": "എനിക്ക് സുഖമാണ് മച്ചാ",
+    },
+}
 
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #205072;
-    }
+districts = list(dialects.keys())
 
-    input[type="text"],
-    select {
-      width: 100%;
-      padding: 10px 12px;
-      font-size: 1rem;
-      border: 2px solid #a9cce3;
-      border-radius: 6px;
-      margin-bottom: 20px;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
+standard_translation = {
+    "how are you": "സുഖമാണോ",
+    "what are you doing": "നീ എന്താണ് ചെയ്യുന്നത്",
+    "where are you going": "നീ എവിടെയാണ് പോകുന്നത്",
+    "i am fine": "എനിക്ക് സുഖമാണ്",
+}
 
-    input[type="text"]:focus,
-    select:focus {
-      border-color: #0b3954;
-      outline: none;
-      box-shadow: 0 0 5px rgba(11, 57, 84, 0.2);
-    }
+@app.route("/", methods=["GET", "POST"])
+def index():
+    result = ""
+    malayalam = ""
+    if request.method == "POST":
+        english = request.form.get("english", "").lower().strip()
+        district = request.form.get("district")
 
-    button {
-      width: 100%;
-      padding: 12px 0;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: white;
-      background-color: #0b3954;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        if english and district:
+            malayalam = standard_translation.get(english, "")
+            district_dialect = dialects.get(district, {})
+            dialect_translation = district_dialect.get(english, "")
 
-    button:hover {
-      background-color: #144d6c;
-    }
+            if dialect_translation:
+                result = dialect_translation
+            else:
+                result = "❌ Sorry, dialect not available for this phrase."
+        else:
+            result = "❌ Please enter a phrase and select a district."
 
-    .result {
-      margin-top: 20px;
-      padding: 12px 20px;
-      background-color: #d7f3fc;
-      border-left: 6px solid #0b3954;
-      font-size: 1.05rem;
-      border-radius: 6px;
-      white-space: pre-wrap;
-      animation: fadeIn 0.4s ease-in-out;
-    }
+    return render_template("index.html", result=result, malayalam=malayalam, districts=districts)
 
-    .error {
-      background-color: #fce4e4;
-      border-left-color: #d9534f;
-      color: #a94442;
-    }
-
-    .translation-label {
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: #0b3954;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Malayalam Dialect Translator</h1>
-    <form method="POST" action="/">
-      <label for="english">Enter English Phrase:</label>
-      <input
-        type="text"
-        id="english"
-        name="english"
-        placeholder="e.g. How are you?"
-        value="{{ request.form.get('english', '') }}"
-        required
-      />
-
-      <label for="district">Select District:</label>
-      <select id="district" name="district" required>
-        <option value="" disabled selected>Select district</option>
-        {% for district in districts %}
-        <option
-          value="{{ district }}"
-          {% if request.form.get('district') == district %}selected{% endif %}
-        >
-          {{ district }}
-        </option>
-        {% endfor %}
-      </select>
-
-      <button type="submit">Translate</button>
-    </form>
-
-    {% if result %}
-    <div class="result {% if '❌' in result %}error{% endif %}">
-      {% if malayalam %}
-      <div class="translation-label">Malayalam:</div>
-      {{ malayalam }}
-      <br /><br />
-      <div class="translation-label">Dialect Translation:</div>
-      {% endif %}
-      {{ result }}
-    </div>
-    {% endif %}
-  </div>
-</body>
-</html>
+if __name__ == "__main__":
+    app.run(debug=True)
